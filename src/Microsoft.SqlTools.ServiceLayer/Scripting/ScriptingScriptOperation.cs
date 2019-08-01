@@ -140,6 +140,10 @@ namespace Microsoft.SqlTools.ServiceLayer.Scripting
         private SqlScriptPublishModel BuildPublishModel()
         {
             SqlScriptPublishModel publishModel = new SqlScriptPublishModel(this.Parameters.ConnectionString);
+            // Below line ensure the specified database in connection string is set to make the
+            // initial database connection. If it is not set, 'master' database is used as fallback.
+            // This fail when the principal (database user) does not have permissions on 'master' database
+            publishModel.Server.ConnectionContext.DatabaseName = publishModel.DatabaseName
 
             // See if any filtering criteria was specified.  If not, we're scripting the entire database.  Otherwise, the filtering
             // criteria should include the target objects to script.
